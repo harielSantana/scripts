@@ -6,6 +6,11 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from PIL import Image
 import pytesseract
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 
 # Configuração do caminho do Tesseract no Ubuntu
 pytesseract.pytesseract.tesseract_cmd = "/bin/tesseract"
@@ -19,8 +24,15 @@ options.add_argument("--disable-dev-shm-usage")
 # Inicia o navegador
 driver = webdriver.Chrome(options=options)
 
+captcha_page_url = os.getenv("CAPTCHA_PAGE_URL")
+
+if not captcha_page_url:
+    raise ValueError("A variável CAPTCHA_PAGE_URL não está definida!")
+
+print(f"URL do CAPTCHA: {captcha_page_url}")
+
 # Abre a página que contém o CAPTCHA
-driver.get("https://sped.fazenda.pr.gov.br/NFe/webservices/sped/nfe/completa")  # Substitua pela URL correta
+driver.get(captcha_page_url)
 
 # Aguarda um tempo para a página carregar
 time.sleep(2)
